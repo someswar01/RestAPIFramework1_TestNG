@@ -4,6 +4,7 @@ import builders.OrderRequestBuilder;
 import builders.RequestBuilder;
 import builders.ResponseSpecFactory;
 import client.RestClient;
+import constants.SchemaPaths;
 import endpoints.Endpoints;
 import io.restassured.response.Response;
 import managers.AuthManager;
@@ -51,9 +52,10 @@ public class OrderService extends BaseService {
         RequestData requestData = RequestBuilder.builder()
                 .header("Authorization", AuthenticationManager.getToken())
                 .body(request)
+                .schema(SchemaPaths.CREATE_ORDER)
                 .build();
 
-        CreateOrderResponse response = RestClient.postCreateOrder(
+        CreateOrderResponse response = RestClient.post3(
                 Endpoints.CREATE_ORDER,
                 requestSpec,
                 requestData,

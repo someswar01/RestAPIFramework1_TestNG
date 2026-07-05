@@ -51,4 +51,10 @@ public class RequestBuilder {
     public RequestData build() {
         return requestData;
     }
+
+    public RequestBuilder schema(String schemaPath) {
+
+        requestData.setSchemaPath(schemaPath);
+        return this;
+    }
 }

@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import managers.AuthManager;
 import pojo.product.ProductRequest;
 import utilities.RandomDataUtil;
-
 public final class ProductRequestBuilder {
 
     private static final Faker faker = new Faker();

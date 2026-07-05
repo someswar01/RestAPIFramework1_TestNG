@@ -3,7 +3,6 @@ package tests;
 
 import base.BaseTest;
 import org.apache.logging.log4j.Logger;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import pojo.login.LoginResponse;
 import services.LoginService;

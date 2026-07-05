@@ -3,6 +3,7 @@ package services;
 import builders.RequestBuilder;
 import builders.ResponseSpecFactory;
 import client.RestClient;
+import constants.SchemaPaths;
 import endpoints.Endpoints;
 import io.restassured.response.Response;
 import managers.AuthManager;
@@ -37,9 +38,10 @@ public class GetOrderService extends BaseService{
         RequestData requestData = RequestBuilder.builder()
                 .header("Authorization", AuthenticationManager.getToken())
                 .queryParam("id", OrderManager.getOrderId())
+                .schema(SchemaPaths.GET_ORDER_DETAILS)
                 .build();
 
-        return RestClient.getOrderDetails1(
+        return RestClient.get3(
                 Endpoints.GET_ORDER_DETAILS,
                 requestSpec,
                 requestData,

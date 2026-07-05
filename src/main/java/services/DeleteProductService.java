@@ -3,6 +3,7 @@ package services;
 import builders.RequestBuilder;
 import builders.ResponseSpecFactory;
 import client.RestClient;
+import constants.SchemaPaths;
 import endpoints.Endpoints;
 import managers.AuthManager;
 import managers.AuthenticationManager;
@@ -36,9 +37,10 @@ public class DeleteProductService extends BaseService {
         RequestData requestData = RequestBuilder.builder()
                 .header("Authorization", AuthenticationManager.getToken())
                 .pathParam("productId", ProductManager.getProductId())
+                .schema(SchemaPaths.DELETE_PRODUCT)
                 .build();
 
-        DeleteProductResponse response = RestClient.delete1(
+        DeleteProductResponse response = RestClient.delete3(
                 Endpoints.DELETE_PRODUCT,
                 requestSpec,
                 requestData,

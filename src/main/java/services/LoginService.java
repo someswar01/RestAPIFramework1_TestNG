@@ -5,6 +5,7 @@ import builders.ResponseSpecFactory;
 import builders.testdata.LoginRequestBuilder;
 import client.RestClient;
 import config.ConfigReader;
+import constants.SchemaPaths;
 import endpoints.Endpoints;
 import io.restassured.response.Response;
 import managers.AuthManager;
@@ -23,9 +24,10 @@ public class LoginService extends BaseService {
 
         RequestData requestData = RequestBuilder.builder()
                 .body(request)
+                .schema(SchemaPaths.LOGIN)
                 .build();
 
-        LoginResponse response = RestClient.postLogin(
+        LoginResponse response = RestClient.post3(
                 Endpoints.LOGIN,
                 requestSpec,
                 requestData,
@@ -38,25 +40,4 @@ public class LoginService extends BaseService {
 
         return response;
     }
-
-//    public LoginResponse login() {
-//
-//        LoginRequest request = LoginRequestBuilder.build();
-//
-//        Response response = given()
-//                .spec(requestSpec)
-//                .body(request)
-//                .when()
-//                .post(Endpoints.LOGIN);
-//
-//        System.out.println("Status Code : " + response.getStatusCode());
-//        System.out.println(response.asPrettyString());
-//
-//        LoginResponse loginResponse = response.as(LoginResponse.class);
-//
-//        AuthManager.setToken(loginResponse.getToken());
-//        AuthManager.setUserId(loginResponse.getUserId());
-//
-//        return loginResponse;
-//    }
 }

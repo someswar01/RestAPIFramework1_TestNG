@@ -1,11 +1,11 @@
 package client;
 
-import io.restassured.RestAssured;
+import extentReports.ExtentLogger;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import models.RequestData;
-import pojo.login.LoginResponse;
+import utilities.SchemaValidator;
 import utilities.RequestBuilder;
 
 import java.io.File;
@@ -118,12 +118,24 @@ public final class RestClient {
             spec.pathParams(requestData.getPathParams());
         }
 
-        return spec
+        Response response = spec
                 .when()
-                .get(endpoint)
-                .then()
-                .extract()
-                .as(responseClass);
+                .get(endpoint);
+
+        // Status Code Validation
+        response.then().spec(responseSpec);
+
+        // Schema Validation
+        if (requestData.getSchemaPath() != null &&
+                !requestData.getSchemaPath().isBlank()) {
+
+            SchemaValidator.validate(
+                    response,
+                    requestData.getSchemaPath()
+            );
+        }
+
+        return response.as(responseClass);
     }
 
     public static Response getOrderDetails(String endpoint,
@@ -222,13 +234,24 @@ public static <T> T postCreateOrder(
         spec.body(requestData.getBody());
     }
 
-    return spec
+    Response response = spec
             .when()
-            .post(endpoint)
-            .then()
-            .spec(responseSpec)
-            .extract()
-            .as(responseClass);
+            .post(endpoint);
+
+    // Status Code Validation
+    response.then().spec(responseSpec);
+
+    // Schema Validation
+    if (requestData.getSchemaPath() != null &&
+            !requestData.getSchemaPath().isBlank()) {
+
+        SchemaValidator.validate(
+                response,
+                requestData.getSchemaPath()
+        );
+    }
+
+    return response.as(responseClass);
 }
     public static <T> T postLogin(
             String endpoint,
@@ -286,7 +309,6 @@ public static <T> T postCreateOrder(
                 .extract()
                 .response();
     }
-
     public static <T> T postLogin(
             String endpoint,
             RequestSpecification requestSpec,
@@ -323,8 +345,20 @@ public static <T> T postCreateOrder(
                 .when()
                 .post(endpoint);
 
+        // Status Code Validation
         response.then().spec(responseSpec);
 
+        // JSON Schema Validation
+        if (requestData.getSchemaPath() != null &&
+                !requestData.getSchemaPath().isBlank()) {
+
+            SchemaValidator.validate(
+                    response,
+                    requestData.getSchemaPath()
+            );
+        }
+
+        // Deserialize Response
         return response.as(responseClass);
     }
     public static <T> T postMultipart(String endpoint,
@@ -361,32 +395,44 @@ public static <T> T postCreateOrder(
 
         RequestSpecification spec = given().spec(requestSpec);
 
-        // headers
-        if (requestData.getHeaders() != null && !requestData.getHeaders().isEmpty()) {
+        // Headers
+        if (requestData.getHeaders() != null &&
+                !requestData.getHeaders().isEmpty()) {
             spec.headers(requestData.getHeaders());
         }
 
-        // form params
-        if (requestData.getFormParams() != null && !requestData.getFormParams().isEmpty()) {
+        // Form Params
+        if (requestData.getFormParams() != null &&
+                !requestData.getFormParams().isEmpty()) {
             spec.formParams(requestData.getFormParams());
         }
 
-        // multipart
+        // Multipart
         if (requestData.getMultipartFile() != null) {
             spec.multiPart(
                     requestData.getMultipartName(),
                     requestData.getMultipartFile());
         }
 
-        return spec
+        Response response = spec
                 .when()
-                .post(endpoint)
-                .then()
-                .spec(responseSpec)
-                .extract()
-                .as(responseClass);
-    }
+                .post(endpoint);
 
+        // Status Code Validation
+        response.then().spec(responseSpec);
+
+        // Schema Validation
+        if (requestData.getSchemaPath() != null &&
+                !requestData.getSchemaPath().isBlank()) {
+
+            SchemaValidator.validate(
+                    response,
+                    requestData.getSchemaPath()
+            );
+        }
+
+        return response.as(responseClass);
+    }
     public static <T> T postOrder(String endpoint,
                              RequestSpecification requestSpec,
                              Map<String, String> headers,
@@ -589,7 +635,6 @@ public static <T> T postCreateOrder(
                 .extract()
                 .response();
     }
-
     public static <T> T delete1(
             String endpoint,
             RequestSpecification requestSpec,
@@ -622,12 +667,297 @@ public static <T> T postCreateOrder(
             spec.body(requestData.getBody());
         }
 
-        return spec
+        Response response = spec
                 .when()
-                .delete(endpoint)
-                .then()
-                .spec(responseSpec)
-                .extract()
-                .as(responseClass);
+                .delete(endpoint);
+
+        // Status Code Validation
+        response.then().spec(responseSpec);
+
+        // Schema Validation
+        if (requestData.getSchemaPath() != null &&
+                !requestData.getSchemaPath().isBlank()) {
+
+            SchemaValidator.validate(
+                    response,
+                    requestData.getSchemaPath()
+            );
+        }
+
+        return response.as(responseClass);
+    }
+
+    private static RequestSpecification buildRequestSpecification(
+            RequestSpecification requestSpec,
+            RequestData requestData) {
+
+        RequestSpecification spec = given().spec(requestSpec);
+
+        // Headers
+        if (requestData.getHeaders() != null &&
+                !requestData.getHeaders().isEmpty()) {
+            spec.headers(requestData.getHeaders());
+        }
+
+        // Query Params
+        if (requestData.getQueryParams() != null &&
+                !requestData.getQueryParams().isEmpty()) {
+            spec.queryParams(requestData.getQueryParams());
+        }
+
+        // Path Params
+        if (requestData.getPathParams() != null &&
+                !requestData.getPathParams().isEmpty()) {
+            spec.pathParams(requestData.getPathParams());
+        }
+
+        // Form Params
+        if (requestData.getFormParams() != null &&
+                !requestData.getFormParams().isEmpty()) {
+            spec.formParams(requestData.getFormParams());
+        }
+
+        // Body
+        if (requestData.getBody() != null) {
+            spec.body(requestData.getBody());
+        }
+
+        // Multipart
+        if (requestData.getMultipartFile() != null) {
+            spec.multiPart(
+                    requestData.getMultipartName(),
+                    requestData.getMultipartFile());
+        }
+
+        return spec;
+    }
+
+    private static void validateResponse(
+            Response response,
+            ResponseSpecification responseSpec,
+            RequestData requestData) {
+
+        response.then().spec(responseSpec);
+
+        if (requestData.getSchemaPath() != null &&
+                !requestData.getSchemaPath().isBlank()) {
+
+            SchemaValidator.validate(
+                    response,
+                    requestData.getSchemaPath()
+            );
+        }
+    }
+
+    private static RequestSpecification buildRequest(
+            RequestSpecification requestSpec,
+            RequestData requestData) {
+
+        RequestSpecification spec = given().spec(requestSpec);
+
+        if (requestData == null) {
+            return spec;
+        }
+
+        // Headers
+        if (requestData.getHeaders() != null &&
+                !requestData.getHeaders().isEmpty()) {
+
+            ExtentLogger.info("Headers : " + requestData.getHeaders());
+            spec.headers(requestData.getHeaders());
+        }
+
+        // Query Params
+        if (requestData.getQueryParams() != null &&
+                !requestData.getQueryParams().isEmpty()) {
+
+            ExtentLogger.info("Query Params : " + requestData.getQueryParams());
+            spec.queryParams(requestData.getQueryParams());
+        }
+
+        // Path Params
+        if (requestData.getPathParams() != null &&
+                !requestData.getPathParams().isEmpty()) {
+
+            ExtentLogger.info("Path Params : " + requestData.getPathParams());
+            spec.pathParams(requestData.getPathParams());
+        }
+
+        // Form Params
+        if (requestData.getFormParams() != null &&
+                !requestData.getFormParams().isEmpty()) {
+
+            ExtentLogger.info("Form Params : " + requestData.getFormParams());
+            spec.formParams(requestData.getFormParams());
+        }
+
+        // Body
+        if (requestData.getBody() != null) {
+
+            ExtentLogger.info("Request Body");
+            ExtentLogger.info("<pre>" + requestData.getBody() + "</pre>");
+
+            spec.body(requestData.getBody());
+        }
+
+        return spec;
+    }
+
+    private static void logResponse(Response response,
+                                    String endpoint) {
+
+        ExtentLogger.info("Endpoint : " + endpoint);
+
+        ExtentLogger.info("Status Code : "
+                + response.getStatusCode());
+
+        ExtentLogger.info("Response Time : "
+                + response.getTime() + " ms");
+
+        ExtentLogger.info("Response");
+
+        ExtentLogger.info("<pre>"
+                + response.asPrettyString()
+                + "</pre>");
+    }
+
+    public static <T> T post3(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        Response response = buildRequest(requestSpec, requestData)
+                .when()
+                .post(endpoint);
+
+        logResponse(response, endpoint);
+
+        response.then().spec(responseSpec);
+
+        return response.as(responseClass);
+    }
+
+    public static <T> T get3(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        Response response = buildRequest(requestSpec, requestData)
+                .when()
+                .get(endpoint);
+
+        logResponse(response, endpoint);
+
+        response.then().spec(responseSpec);
+
+        return response.as(responseClass);
+    }
+
+    public static <T> T delete3(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        Response response = buildRequest(requestSpec, requestData)
+                .when()
+                .delete(endpoint);
+
+        logResponse(response, endpoint);
+
+        response.then().spec(responseSpec);
+
+        return response.as(responseClass);
+    }
+
+    public static <T> T executeMultipart3(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        RequestSpecification spec = buildRequest(requestSpec, requestData);
+
+        if (requestData.getMultipartFile() != null) {
+
+            ExtentLogger.info("Multipart File : "
+                    + requestData.getMultipartFile().getName());
+
+            spec.multiPart(
+                    requestData.getMultipartName(),
+                    requestData.getMultipartFile());
+        }
+
+        Response response = spec
+                .when()
+                .post(endpoint);
+
+        logResponse(response, endpoint);
+
+        response.then().spec(responseSpec);
+
+        return response.as(responseClass);
+    }
+    public static <T> T getOrderDetails2(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        RequestSpecification spec =
+                buildRequestSpecification(requestSpec, requestData);
+
+        Response response = spec
+                .when()
+                .get(endpoint);
+
+        validateResponse(response, responseSpec, requestData);
+
+        return response.as(responseClass);
+    }
+
+    public static <T> T postMultipart1(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        RequestSpecification spec =
+                buildRequestSpecification(requestSpec, requestData);
+
+        Response response = spec
+                .when()
+                .post(endpoint);
+
+        validateResponse(response, responseSpec, requestData);
+
+        return response.as(responseClass);
+    }
+
+    public static <T> T delete(
+            String endpoint,
+            RequestSpecification requestSpec,
+            RequestData requestData,
+            ResponseSpecification responseSpec,
+            Class<T> responseClass) {
+
+        RequestSpecification spec =
+                buildRequestSpecification(requestSpec, requestData);
+
+        Response response = spec
+                .when()
+                .delete(endpoint);
+
+        validateResponse(response, responseSpec, requestData);
+
+        return response.as(responseClass);
     }
 }

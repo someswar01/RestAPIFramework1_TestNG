@@ -1,9 +1,12 @@
 package base;
 
 
+import extentReports.ReportListener;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.Listeners;
 
+@Listeners(ReportListener.class)
 public class BaseTest {
 
     @BeforeSuite

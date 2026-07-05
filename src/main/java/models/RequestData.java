@@ -24,4 +24,7 @@ public class RequestData {
     private File multipartFile;
 
     private String multipartName;
+
+    private String schemaPath;
+
 }

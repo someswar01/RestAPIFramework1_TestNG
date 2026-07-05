@@ -5,6 +5,7 @@ import builders.ProductRequestBuilder;
 import builders.RequestBuilder;
 import builders.ResponseSpecFactory;
 import client.RestClient;
+import constants.SchemaPaths;
 import endpoints.Endpoints;
 
 import managers.AuthenticationManager;
@@ -59,11 +60,12 @@ public class ProductService extends BaseService {
         RequestData requestData = RequestBuilder.builder()
                 .header("Authorization", AuthenticationManager.getToken())
                 .multiPart(image, "productImage")
+                .schema(SchemaPaths.ADD_PRODUCT)
                 .build();
 
         requestData.getFormParams().putAll(request.toFormParams());
 
-        AddProductResponse response = RestClient.executeMultipart(
+        AddProductResponse response = RestClient.executeMultipart3(
                 Endpoints.ADD_PRODUCT,
                 multiPartRequestSpec,
                 requestData,
