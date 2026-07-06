@@ -32,23 +32,27 @@ pipeline {
         }
     }
 
-    post {
+   post {
 
-        always {
+       always {
 
-            archiveArtifacts artifacts: 'test-output/**/*',
-                             fingerprint: true
+           archiveArtifacts(
+                   artifacts: 'reports/**/*',
+                   allowEmptyArchive: true
+           )
 
-            archiveArtifacts artifacts: 'ExtentReports/**/*',
-                             fingerprint: true
-        }
+           archiveArtifacts(
+                   artifacts: 'test-output/**/*',
+                   allowEmptyArchive: true
+           )
+       }
 
-        success {
-            echo 'Framework executed successfully.'
-        }
+       success {
+           echo 'Framework executed successfully.'
+       }
 
-        failure {
-            echo 'Framework execution failed.'
-        }
-    }
+       failure {
+           echo 'Framework execution failed.'
+       }
+   }
 }
