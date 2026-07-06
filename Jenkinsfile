@@ -21,38 +21,29 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                allure([
-                        includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'allure-results']]
-                ])
-            }
+         stage('Publish Allure Report') {
+                    steps {
+                        allure([
+                            includeProperties: false,
+                            jdk: '',
+                            results: [[path: 'allure-results']]
+                        ])
+                    }
         }
     }
 
    post {
 
-       always {
+           always {
+               archiveArtifacts artifacts: 'allure-results/**', fingerprint: true
+           }
 
-           archiveArtifacts(
-                   artifacts: 'reports/**/*',
-                   allowEmptyArchive: true
-           )
+           success {
+               echo 'Framework execution completed successfully'
+           }
 
-           archiveArtifacts(
-                   artifacts: 'test-output/**/*',
-                   allowEmptyArchive: true
-           )
-       }
-
-       success {
-           echo 'Framework executed successfully.'
-       }
-
-       failure {
-           echo 'Framework execution failed.'
-       }
+           failure {
+               echo 'framework execution failed'
+           }
    }
 }
