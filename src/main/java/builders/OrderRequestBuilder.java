@@ -1,20 +1,19 @@
 package builders;
 
-import managers.ProductManager;
 import pojo.order.CreateOrderRequest;
 import pojo.order.Order;
 
 import java.util.List;
-
 public final class OrderRequestBuilder {
 
-    private OrderRequestBuilder(){}
+    private OrderRequestBuilder() {
+    }
 
-    public static CreateOrderRequest build(){
+    public static CreateOrderRequest build(String productId) {
 
         Order order = Order.builder()
                 .country("India")
-                .productOrderedId(ProductManager.getProductId())
+                .productOrderedId(productId)
                 .build();
 
         return CreateOrderRequest.builder()

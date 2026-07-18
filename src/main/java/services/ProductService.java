@@ -1,5 +1,6 @@
 package services;
 
+import base.TestContext;
 import builders.ProductRequestBuilder;
 
 import builders.RequestBuilder;
@@ -8,57 +9,29 @@ import client.RestClient;
 import constants.SchemaPaths;
 import endpoints.Endpoints;
 
-import managers.AuthenticationManager;
-import managers.ProductManager;
 import models.RequestData;
 import pojo.product.AddProductResponse;
 import pojo.product.ProductRequest;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ProductService extends BaseService {
 
-    /**
-     * Add Product
-     */
+    private final TestContext context;
 
-//    public AddProductResponse addProduct() {
-//
-//        ProductRequest request = ProductRequestBuilder.build();
-//
-//        File image = new File("src/test/resources/images/HeadPhones1.jpg");
-//
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("Authorization", AuthManager.getToken());
-//
-//        AddProductResponse response = RestClient.postMultipart1(
-//                Endpoints.ADD_PRODUCT,
-//                multiPartRequestSpec,
-//                headers,
-//                request.toFormParams(),
-//                image,
-//                "productImage",
-//                AddProductResponse.class
-//        );
-//
-//        ProductManager.setProductId(response.getProductId());
-//
-//        return response;
-//    }
-
-
+    public ProductService(TestContext context) {
+        this.context = context;
+    }
 
     public AddProductResponse addProduct() {
 
-        ProductRequest request = ProductRequestBuilder.build();
-
+        ProductRequest request =
+                ProductRequestBuilder.build(context.getUserId());
         File image = new File("src/test/resources/images/HeadPhones1.jpg");
 
         RequestData requestData = RequestBuilder.builder()
-                .header("Authorization", AuthenticationManager.getToken())
+                .header("Authorization", context.getToken())
                 .multiPart(image, "productImage")
                 .schema(SchemaPaths.ADD_PRODUCT)
                 .build();
@@ -73,10 +46,8 @@ public class ProductService extends BaseService {
                 AddProductResponse.class
         );
 
-        ProductManager.setProductId(response.getProductId());
+        context.setProductId(response.getProductId());
 
         return response;
     }
-
-
 }

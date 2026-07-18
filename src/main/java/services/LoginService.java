@@ -1,22 +1,24 @@
 package services;
 
+import base.TestContext;
 import builders.RequestBuilder;
 import builders.ResponseSpecFactory;
 import builders.testdata.LoginRequestBuilder;
 import client.RestClient;
-import config.ConfigReader;
 import constants.SchemaPaths;
 import endpoints.Endpoints;
-import io.restassured.response.Response;
-import managers.AuthManager;
+
 import models.RequestData;
 import pojo.login.LoginRequest;
 import pojo.login.LoginResponse;
 
-import static io.restassured.RestAssured.given;
-
 public class LoginService extends BaseService {
 
+    private final TestContext context;
+
+    public LoginService(TestContext context) {
+        this.context = context;
+    }
 
     public LoginResponse login() {
 
@@ -35,8 +37,8 @@ public class LoginService extends BaseService {
                 LoginResponse.class
         );
 
-        AuthManager.setToken(response.getToken());
-        AuthManager.setUserId(response.getUserId());
+        context.setToken(response.getToken());
+        context.setUserId(response.getUserId());
 
         return response;
     }
