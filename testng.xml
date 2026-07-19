@@ -9,9 +9,7 @@
     <test name="Authentication Tests">
 
         <classes>
-<!--            <class name="tests.LoginTest"/>-->
-            <class name="tests.ProductTest"/>
-<!--            <class name="tests.Demo"/>-->
+            <class name="runners.TestRunner"/>
         </classes>
 
     </test>
