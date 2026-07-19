@@ -1,194 +1,271 @@
-# 🚀 REST API Automation Framework | Rest Assured | TestNG | Java
+# 🚀 Rest API Automation Framework | Java | Rest Assured | TestNG | Jenkins | Allure | Extent Reports
 
-## 📌 Overview
-
-This project is a scalable and reusable REST API Automation Framework developed using **Java**, **Rest Assured**, and **TestNG**.
-
-The framework follows **Layered Architecture**, **Builder Pattern**, **API Chaining**, **POJO Mapping**, and **Generic Programming** principles to make API automation clean, maintainable, and extensible.
+A scalable, reusable, and enterprise-level REST API Automation Framework built using **Java**, **Rest Assured**, **TestNG**, and **Maven** following industry best practices.
 
 ---
 
-# 🛠 Tech Stack
+# 📌 Tech Stack
 
-* Java
-* Rest Assured
-* TestNG
-* Maven
-* Jackson (POJO Mapping)
-* Lombok
-* Log4j
-* Git & GitHub
-
----
-
-# 📂 Framework Architecture
-
-```
-Tests
-   │
-   ▼
-Services
-   │
-   ▼
-Generic RestClient
-   │
-   ▼
-Request Builder
-   │
-   ▼
-Rest Assured
-```
+- Java 21
+- Rest Assured
+- TestNG
+- Maven
+- Log4j2
+- Extent Reports
+- Allure Reports
+- Jenkins
+- Jenkins Pipeline
+- Git & GitHub
+- Jackson
+- JSON Schema Validation
 
 ---
 
-# 🔄 State Management
+# 📂 Project Structure
 
 ```
-AuthenticationManager
-        │
-        ▼
-      Token
-
-ProductManager
-        │
-        ▼
-     ProductId
-
-OrderManager
-        │
-        ▼
-      OrderId
-```
-
-The framework automatically stores and reuses runtime values across API calls.
-
----
-
-# 📁 Project Structure
-
-```
-src
+APIFramework1
 │
-├── builders
-├── client
-├── config
-├── constants
-├── managers
-├── models
-├── pojo
-├── services
-├── specifications
-├── tests
-└── utils
+├── src
+│   ├── main
+│   │     ├── constants
+│   │     ├── enums
+│   │     ├── managers
+│   │     ├── models
+│   │     ├── requests
+│   │     ├── specifications
+│   │     ├── utilities
+│   │     └── listeners
+│   │
+│   └── test
+│         ├── tests
+│         ├── base
+│         └── resources
+│
+├── reports
+├── target
+├── Jenkinsfile
+├── testng.xml
+├── pom.xml
+└── README.md
 ```
 
 ---
 
 # ✨ Features
 
-* Generic RestClient
-* Generic Request Builder
-* Generic RequestData Model
-* Generic Response Specification
-* Builder Pattern
-* Layered Architecture
-* API Chaining
-* POJO Serialization & Deserialization
-* Authentication Manager
-* Product Manager
-* Order Manager
-* Multipart Request Support
-* Query Parameters
-* Path Parameters
-* Form Parameters
-* Centralized Response Validation
-* Reusable Services
+✔ Generic Rest Client
+
+✔ Request Builder Pattern
+
+✔ Authentication Token Management
+
+✔ Response Specification
+
+✔ Request Specification
+
+✔ API Chaining
+
+✔ Reusable Utilities
+
+✔ Logging using Log4j2
+
+✔ Extent HTML Reports
+
+✔ Allure Reports
+
+✔ Jenkins CI Integration
+
+✔ Jenkins Declarative Pipeline
+
+✔ JSON Schema Validation
+
+✔ TestNG Execution
+
+✔ Maven Build Support
 
 ---
 
-# 🔥 Implemented APIs
-
-✅ Login
-
-✅ Add Product (Multipart)
-
-✅ Create Order
-
-✅ Get Order Details
-
-✅ Delete Product
-
----
-
-# 🔗 End-to-End API Flow
+# 🏗 Framework Design
 
 ```
-Login
-   │
-   ▼
-Add Product
-   │
-   ▼
-Create Order
-   │
-   ▼
-Get Order Details
-   │
-   ▼
-Delete Product
+Test
+
+↓
+
+Service Layer
+
+↓
+
+Rest Client
+
+↓
+
+Request Builder
+
+↓
+
+Response Specification
+
+↓
+
+Rest Assured
 ```
 
 ---
 
-# 🎯 Design Patterns Used
+# 🚀 Reports
 
-* Layered Architecture
-* Builder Pattern
-* Singleton Manager
-* Generic Programming
-* POJO Mapping
-* API Chaining
+## Extent Report
+
+```
+reports/
+    API-Automation-Report.html
+```
+
+Contains
+
+- Test Summary
+- Pass/Fail Status
+- Execution Time
+- Logs
+- Exception Details
 
 ---
 
-# ▶️ How to Run
+## Allure Report
 
-Clone the repository
-
-```
-git clone https://github.com/someswar01/RestAPIFramework1_TestNG.git
-```
-
-Navigate to the project
+Generated under
 
 ```
-cd RestAPIFramework1_TestNG
+target/allure-results
 ```
 
-Run the tests
+View inside Jenkins
+
+or
 
 ```
+allure serve target/allure-results
+```
+
+---
+
+# ⚙ Running Tests
+
+## Using Maven
+
+```bash
 mvn clean test
 ```
 
-Or execute using TestNG from your IDE.
+---
+
+## Using TestNG
+
+```
+testng.xml
+```
+
+Run the suite directly from IDE.
 
 ---
 
-# 📈 Future Enhancements
+# 🔥 Jenkins Pipeline
 
-* PUT API
-* PATCH API
-* JSON Schema Validation
-* Extent Reports
-* Retry Mechanism
-* Data Providers
-* Environment Switching (QA/UAT/PROD)
-* Jenkins Integration
-* Azure Pipelines
-* Docker
-* Parallel Execution
-* GitHub Actions
+Pipeline stages
+
+```
+Checkout
+
+↓
+
+Build
+
+↓
+
+Execute Tests
+
+↓
+
+Generate Allure Report
+
+↓
+
+Archive Artifacts
+```
+
+---
+
+# 📊 Reports Generated
+
+✅ Extent HTML Report
+
+✅ Allure Dashboard
+
+---
+
+# 📸 Jenkins Pipeline
+
+- Git Checkout
+- Maven Build
+- Test Execution
+- Allure Report Generation
+- Artifact Archival
+
+---
+
+# 📁 Current Test Coverage
+
+Authentication API
+
+- Login
+
+Product API
+
+- Add Product
+- Get Product
+- Delete Product
+
+Order API
+
+- Create Order
+- Get Order Details
+
+---
+
+# 🧩 Design Patterns Used
+
+- Builder Pattern
+- Singleton Pattern
+- Factory Pattern
+- Utility Pattern
+- Service Layer Pattern
+
+---
+
+# 📈 CI/CD
+
+Integrated with
+
+- Jenkins
+- GitHub
+- Maven
+- Allure
+
+---
+
+# 🛠 Future Enhancements
+
+- Docker Integration
+- GitHub Actions
+- Retry Analyzer
+- Parallel Execution
+- Environment Configuration
+- Slack Notifications
+- SonarQube Integration
+- Performance Testing
+- API Data Driven Framework
 
 ---
 
@@ -198,17 +275,20 @@ Or execute using TestNG from your IDE.
 
 Automation Test Engineer
 
-Specialized in:
+Skills
 
-* Selenium with Java
-* Playwright
-* REST Assured
-* API Automation
-* TestNG
-* Cucumber
-* CI/CD
-* Git & GitHub
+- Java
+- Rest Assured
+- Selenium
+- Playwright
+- TestNG
+- Jenkins
+- Maven
+- Git
+- Azure DevOps
 
 ---
 
-## ⭐ If you find this project useful, don't forget to star the repository!
+# ⭐ If you found this project useful
+
+Please give this repository a ⭐ on GitHub.
